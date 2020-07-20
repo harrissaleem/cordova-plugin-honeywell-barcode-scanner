@@ -1,0 +1,17 @@
+// If you want to load properties from profile name "DEFAULT"
+
+barcodeReader.loadProfile("DEFAULT");
+
+// after loading profile it stopped giving barcode events so I had to do the following
+Map<String, Object> newProps = new HashMap<String, Object>();
+
+for (Map.Entry<String, Object> entry : barcodeReader.getAllProperties().entrySet()) {
+    // Apparently this property is not included in BarcodeReader.class but honeywell SDK returns this also when we call getAllProperties which causes issues
+    if (entry.getKey().equalsIgnoreCase("DPR_WEDGE"))
+        continue;
+     newProps.put(entry);
+}
+
+// You will need to reintialize barcode reader before setting new properties
+reinitializeBarcodeReader();
+barcodeReader.setProperties(newProps);
